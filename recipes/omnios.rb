@@ -17,16 +17,29 @@
 # limitations under the License.
 #
 
-%w{
-  developer/gcc47
+pkgs = %w{
   developer/object-file
   developer/linker
   developer/library/lint
   developer/build/gnu-make
   system/header
   system/library/math/header-math
-}.each do |pkg|
+}
 
+case node['platform_version']
+when '151002'
+  gcc_pkg = 'developer/gcc-3'
+when '151004'
+  gcc_pkg = 'developer/gcc46'
+when '151006'
+  gcc_pkg = 'developer/gcc47'
+when '151008'
+  gcc_pkg = 'developer/gcc48'
+end
+
+pkgs.unshift(gcc_pkg)
+
+pkgs.each do |pkg|
   r = package pkg do
     action( node['build_essential']['compiletime'] ? :nothing : :install )
   end
